@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .card {
+      margin: 20px;
+      padding: 10px 10px 10px 10px;
+      }
+    .picture{
+      width: 50%;
+      height: 500px;
+      box-shadow: 10px 10px 5px grey;
+      border-radius: 8px;
+      display: block;
+      margin: auto;
+    }
+    .name{
+      text-align: center;
+      font-style: italic;
+      font-size: 40px;
+    }
+    .picture-container{
+      text-align: justify;
+    text-justify: inter-word;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      text-shadow: 1px 1px grey;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="main-container"></div>
+  <script>
+    fetch("http://localhost:1338/api/sportsfigures")
+      .then(rawResp => rawResp.json())
+      .then(SportsFigures => {
+        var elements = "";
+        SportsFigures.forEach(function(fig, idx) {
+          if (!fig.name) return;
+          elements += buildCard(fig);
+        });
+        document.getElementById("main-container").innerHTML = elements;
+      });
+
+
+    function buildCard(sportsDude) {
+      let achievements = sportsDude.achievements.map(ach => `<li>${ach}</li>`);
+      achievements = achievements.reduce((p, c) => p + c, "");
+      return `
+<div class="card">
+<div class="picture-container">
+<img class="picture" src="${sportsDude.pictureUrl}" />
+<h2 class="name">${sportsDude.name}</h2>
+<h3>${sportsDude.sport}</h3>
+<ul>
+${achievements}
+</ul>
+</div>
+  `;
+    }
+  </script>
+</body>
+
+</html>
